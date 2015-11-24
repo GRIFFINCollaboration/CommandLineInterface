@@ -8,6 +8,7 @@
 #include <vector>
 #include <sys/stat.h> 
 #include <limits>
+#include <dirent.h>
 
 #include "TVectorT.h"
 
@@ -57,6 +58,10 @@ bool FileExists(std::string);
 bool FileExists(const char*);
 bool DirectoryExists(std::string);
 bool DirectoryExists(const char*);
+bool IsDirectory(std::string);
+bool IsDirectory(const char*);
+std::vector<std::string> GetFilesInDirectory(std::string);
+std::vector<std::string> GetFilesInDirectory(const char*);
 
 template <typename T>
 inline bool IsNan(T value) {

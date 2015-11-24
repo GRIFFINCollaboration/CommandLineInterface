@@ -174,45 +174,36 @@ bool FileExists(const char* Filename) {
   return Return; 
 }
 
-bool DirectoryExists(std::string Directoryname) { 
-  //copied from techbytes.ca and added check if it's a directory
-  struct stat DirectoryInfo; 
-  bool Return; 
-  int Stat; 
-
-  // Attempt to get the file attributes 
-  Stat = stat(Directoryname.c_str(),&DirectoryInfo); 
-  if(Stat == 0) { 
-    // We were able to get the file attributes 
-    // so the file obviously exists. 
-    // But it might be a directory so check that with st_mode
-    Return = S_ISDIR(DirectoryInfo.st_mode); 
-  } else { 
-    // We were not able to get the file attributes. 
-    // This may mean that we don't have permission to 
-    // access the folder which contains this file. If you 
-    // need to do that level of checking, lookup the 
-    // return values of stat which will give you 
-    // more details on why stat failed. 
-    Return = false; 
-  }
-   
-  return Return; 
+bool IsDirectory(std::string name) {
+	return IsDirectory(name.c_str());
 }
 
-bool DirectoryExists(const char* Directoryname) { 
+bool IsDirectory(const char* name) {
+	struct stat info;
+	int stats = stat(name,&info);
+	if(stats == 0) {
+		return S_ISDIR(info.st_mode);
+	} else {
+		return false;
+	}
+}
+
+bool DirectoryExists(std::string directoryName) { 
+  return DirectoryExists(directoryName.c_str()); 
+}
+
+bool DirectoryExists(const char* directoryName) { 
   //copied from techbytes.ca and added check if it's a directory
   struct stat DirectoryInfo; 
-  bool Return; 
   int Stat; 
 
   // Attempt to get the file attributes 
-  Stat = stat(Directoryname,&DirectoryInfo); 
+  Stat = stat(directoryName,&DirectoryInfo); 
   if(Stat == 0) { 
     // We were able to get the file attributes 
     // so the file obviously exists. 
     // But it might be a directory so check that with st_mode
-    Return = S_ISDIR(DirectoryInfo.st_mode); 
+    return S_ISDIR(DirectoryInfo.st_mode); 
   } else { 
     // We were not able to get the file attributes. 
     // This may mean that we don't have permission to 
@@ -220,8 +211,33 @@ bool DirectoryExists(const char* Directoryname) {
     // need to do that level of checking, lookup the 
     // return values of stat which will give you 
     // more details on why stat failed. 
-    Return = false; 
+    return false; 
   }
-   
-  return Return; 
+}
+
+std::vector<std::string> GetFilesInDirectory(std::string name) {
+	return GetFilesInDirectory(name.c_str());
+}
+
+std::vector<std::string> GetFilesInDirectory(const char* name) {
+	std::vector<std::string> files;
+
+	DIR* dir = opendir(name);
+	struct dirent* ent;
+
+	if(dir != NULL) {
+		while((ent = readdir(dir)) != NULL) {
+			if(strcmp(ent->d_name, ".") == 0 || strcmp(ent->d_name, "..") == 0) {
+				continue;
+			}
+			files.push_back(name);
+			files.back().append(ent->d_name);
+		}
+		closedir(dir);
+	} else {
+		//could not open directory
+		std::cerr<<"Failed to open directory '"<<name<<"'!"<<std::endl;
+	}
+
+	return files;
 }
