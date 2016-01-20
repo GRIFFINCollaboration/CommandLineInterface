@@ -27,8 +27,9 @@ test: test.cc CommandLineInterface.o Utilities.o
 	$(CPP) $(CFLAGS) $(INCLUDES) $< CommandLineInterface.o Utilities.o $(LIBS) -o $@
 
 lib%.so: %.o
+	@ mkdir -p $(LIB_DIR)
 	$(CPP) $(LFLAGS) -shared -o $(LIB_DIR)/$@.1.0.1 $^ $(LIBS) -lc
-#	@ !(test -L $(LIB_DIR)/$@) && ln -s $(LIB_DIR)/$@.1.0.1 $(LIB_DIR)/$@
+	@ ln -sf $(LIB_DIR)/$@.1.0.1 $(LIB_DIR)/$@
 
 %.o: %.cc %.hh
 	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
