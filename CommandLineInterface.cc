@@ -13,7 +13,7 @@ CommandLineInterface::CommandLineInterface() {
 }
 
 bool CommandLineInterface::CheckFlags(int argc, char* argv[], const bool& Debug) {
-  int i,j;
+  size_t i,j;
   
   if(argc == 1) {
     for(i = 0; i < fFlags.size(); i++) {
@@ -31,14 +31,14 @@ bool CommandLineInterface::CheckFlags(int argc, char* argv[], const bool& Debug)
     return true;
   }
 
-  for(i = 1; i < argc; i++) {
+  for(i = 1; i < (size_t) argc; i++) {
     for(j = 0; j < fFlags.size(); j++) {
       if(argv[i] == fFlags[j]) {
 	//bool doesn't need any value to be read
 	if(fTypes[j] == "bool") {
 	  *((bool*) fValues[j]) = true;
 	  break;//found the right flag for this argument so the flag loop can be stopped
-	} else if(i+1 >= argc) {
+	} else if(i+1 >= (size_t) argc) {
 	  //if not bool check whether there are more arguments (with values) coming
 	  cerr<<"Error in CheckFlags, flag "<<fFlags[j]<<" needs additional arguments"<<endl;
 	  return false;
@@ -51,7 +51,7 @@ bool CommandLineInterface::CheckFlags(int argc, char* argv[], const bool& Debug)
 	  *((string*) fValues[j]) = argv[i+1];
 	  i+=2;
 	  //as long as there are arguments left and no new flag is found (flags start with -) => add another value (with whitespace inbetween)
-	  while(i < argc) {
+	  while(i < (size_t) argc) {
 	    if(argv[i][0] != '-') {
 	      (*((string*)fValues[j])).append(" ");
 	      (*((string*)fValues[j])).append(argv[i]);
@@ -104,7 +104,7 @@ bool CommandLineInterface::CheckFlags(int argc, char* argv[], const bool& Debug)
 	  //reset the vector
 	  (*((vector<char*>*)fValues[j])).clear();
 	  //as long as there are arguments left and no new flag is found (flags start with -) => read another value
-	  while(i < argc) {
+	  while(i < (size_t) argc) {
 	    if(argv[i][0] != '-') {
 	      (*((vector<char*>*)fValues[j])).push_back(argv[i]);
 	      i++;
@@ -120,7 +120,7 @@ bool CommandLineInterface::CheckFlags(int argc, char* argv[], const bool& Debug)
 	  //as long as there are arguments left and no new flag is found (flags start with -) => read another value
 	  //reset the vector
 	  (*((vector<string>*)fValues[j])).clear();
-	  while(i < argc) {
+	  while(i < (size_t) argc) {
 	    if(argv[i][0] != '-') {
 	      (*((vector<string>*)fValues[j])).push_back(argv[i]);
 	      i++;
@@ -136,7 +136,7 @@ bool CommandLineInterface::CheckFlags(int argc, char* argv[], const bool& Debug)
 	  //reset the vector
 	  (*((vector<short>*)fValues[j])).clear();
 	  //as long as there are arguments left and no new flag is found (flags start with -, but so do negative numbers!) => read another value
-	  while(i < argc) {
+	  while(i < (size_t) argc) {
 	    if(argv[i][0] != '-' || isdigit(argv[i][1])) {
 	      (*((vector<short>*)fValues[j])).push_back(atoi(argv[i]));
 	      i++;
@@ -152,7 +152,7 @@ bool CommandLineInterface::CheckFlags(int argc, char* argv[], const bool& Debug)
 	  //reset the vector
 	  (*((vector<int>*)fValues[j])).clear();
 	  //as long as there are arguments left and no new flag is found (flags start with -, but so do negative numbers!) => read another value
-	  while(i < argc) {
+	  while(i < (size_t) argc) {
 	    if(argv[i][0] != '-' || isdigit(argv[i][1])) {
 	      (*((vector<int>*)fValues[j])).push_back(atoi(argv[i]));
 	      i++;
@@ -168,7 +168,7 @@ bool CommandLineInterface::CheckFlags(int argc, char* argv[], const bool& Debug)
 	  //reset the vector
 	  (*((vector<long long>*)fValues[j])).clear();
 	  //as long as there are arguments left and no new flag is found (flags start with -, but so do negative numbers!) => read another value
-	  while(i < argc) {
+	  while(i < (size_t) argc) {
 	    if(argv[i][0] != '-' || isdigit(argv[i][1])) {
 	      (*((vector<long long>*)fValues[j])).push_back(atoi(argv[i]));
 	      i++;
@@ -184,7 +184,7 @@ bool CommandLineInterface::CheckFlags(int argc, char* argv[], const bool& Debug)
 	  //reset the vector
 	  (*((vector<uint8_t>*)fValues[j])).clear();
 	  //as long as there are arguments left and no new flag is found (flags start with -, but so do negative numbers!) => read another value
-	  while(i < argc) {
+	  while(i < (size_t) argc) {
 	    if(argv[i][0] != '-' || isdigit(argv[i][1])) {
 	      (*((vector<uint8_t>*)fValues[j])).push_back(atoi(argv[i]));
 	      i++;
@@ -200,7 +200,7 @@ bool CommandLineInterface::CheckFlags(int argc, char* argv[], const bool& Debug)
 	  //reset the vector
 	  (*((vector<uint16_t>*)fValues[j])).clear();
 	  //as long as there are arguments left and no new flag is found (flags start with -, but so do negative numbers!) => read another value
-	  while(i < argc) {
+	  while(i < (size_t) argc) {
 	    if(argv[i][0] != '-' || isdigit(argv[i][1])) {
 	      (*((vector<uint16_t>*)fValues[j])).push_back(atoi(argv[i]));
 	      i++;
@@ -216,7 +216,7 @@ bool CommandLineInterface::CheckFlags(int argc, char* argv[], const bool& Debug)
 	  //reset the vector
 	  (*((vector<uint32_t>*)fValues[j])).clear();
 	  //as long as there are arguments left and no new flag is found (flags start with -, but so do negative numbers!) => read another value
-	  while(i < argc) {
+	  while(i < (size_t) argc) {
 	    if(argv[i][0] != '-' || isdigit(argv[i][1])) {
 	      (*((vector<uint32_t>*)fValues[j])).push_back(atoi(argv[i]));
 	      i++;
@@ -232,7 +232,7 @@ bool CommandLineInterface::CheckFlags(int argc, char* argv[], const bool& Debug)
 	  //reset the vector
 	  (*((vector<uint64_t>*)fValues[j])).clear();
 	  //as long as there are arguments left and no new flag is found (flags start with -, but so do negative numbers!) => read another value
-	  while(i < argc) {
+	  while(i < (size_t) argc) {
 	    if(argv[i][0] != '-' || isdigit(argv[i][1])) {
 	      (*((vector<uint64_t>*)fValues[j])).push_back(atoi(argv[i]));
 	      i++;
@@ -248,7 +248,7 @@ bool CommandLineInterface::CheckFlags(int argc, char* argv[], const bool& Debug)
 	  //reset the vector
 	  (*((vector<size_t>*)fValues[j])).clear();
 	  //as long as there are arguments left and no new flag is found (flags start with -) => read another value
-	  while(i < argc) {
+	  while(i < (size_t) argc) {
 	    if(argv[i][0] != '-') {
 	      (*((vector<size_t>*)fValues[j])).push_back(atoi(argv[i]));
 	      i++;
@@ -264,7 +264,7 @@ bool CommandLineInterface::CheckFlags(int argc, char* argv[], const bool& Debug)
 	  //reset the vector
 	  (*((vector<double>*)fValues[j])).clear();
 	  //as long as there are arguments left and no new flag is found (flags start with -, but so do negative numbers!) => read another value
-	  while(i < argc) {
+	  while(i < (size_t) argc) {
 	    if(argv[i][0] != '-' || isdigit(argv[i][1])) {
 	      (*((vector<double>*)fValues[j])).push_back(atof(argv[i])*fFactors[j]);
 	      i++;
@@ -285,7 +285,7 @@ bool CommandLineInterface::CheckFlags(int argc, char* argv[], const bool& Debug)
     } else if(Debug) {
       cout<<"found flag "<<i<<" = "<<argv[i]<<endl;
     }
-  }//for(i = 1; i < argc; i++)
+  }//for(i = 1; i < (size_t) argc; i++)
 
   if(Debug) {
     cout<<*this<<endl;
@@ -296,7 +296,7 @@ bool CommandLineInterface::CheckFlags(int argc, char* argv[], const bool& Debug)
 
 ostream& operator <<(ostream &os,const CommandLineInterface &obj) {
   os<<"command line flags are:"<<endl;
-  for(int i = 0; i < obj.fValues.size(); i++) {
+  for(size_t i = 0; i < obj.fValues.size(); i++) {
     if(obj.fTypes[i] == "bool") {
       cout<<obj.fFlags[i]<<": "<<*((bool*) obj.fValues[i])<<endl;
     } else if(obj.fTypes[i] == "char*") {

@@ -1,42 +1,66 @@
 .EXPORT_ALL_VARIABLES:
 
+.SUFFIXES:
+
 .PHONY: clean all
 
-LIB_DIR = $(HOME)/lib
+SHELL 		= /bin/sh
+
+LIB_DIR 	= $(HOME)/lib
 
 ROOTCFLAGS   := $(shell root-config --cflags)
 ROOTLIBS     := $(shell root-config --libs)
 ROOTGLIBS    := $(shell root-config --glibs)
 ROOTINC      := -I$(shell root-config --incdir)
 
-ALLIBS  = -lm $(ROOTGLIBS) -L$(HOME)/lib 
+INCLUDES        = -I.
+
+LIBRARIES	= 
 
 CC		= gcc
-CPP             = g++
-CFLAGS		= -g2 -O3 $(ROOTCFLAGS) -fpic
+CXX             = g++
+CPPFLAGS 	= $(ROOTINC) $(INCLUDES) -fPIC
+CXXFLAGS	= -std=c++11 -pedantic -Wall -Wno-long-long -g -O3
 
-INCLUDES        = -I./
+LDFLAGS		= -g -fPIC
 
-LFLAGS		= -g -fpic
-LIBS 		= $(ALLIBS)
+LDLIBS 		= -L$(LIB_DIR) $(ROOTLIBS) $(addprefix -l,$(LIBRARIES)) -lm
 
-all:  libCommandLineInterface.so libUtilities.so
+LOADLIBES	= CommandLineInterface.o Utilities.o TextAttributes.o
+
+# -------------------- implicit rules --------------------
+# n.o made from n.c by 		$(CC) -c $(CPPFLAGS) $(CFLAGS)
+# n.o made from n.cc by 	$(CXX) -c $(CPPFLAGS) $(CXXFLAGS)
+# n made from n.o by 		$(CC) $(LDFLAGS) n.o $(LOADLIBES) $(LDLIBS)
+
+# -------------------- rules --------------------
+
+# for library: add $(LIB_DIR)/lib$(NAME).so
+all:  libCommandLineInterface.so libUtilities.so libTextAttributes.so
 	@echo Done
 
-test: test.cc CommandLineInterface.o Utilities.o
-	$(CPP) $(CFLAGS) $(INCLUDES) $< CommandLineInterface.o Utilities.o $(LIBS) -o $@
+# -------------------- libraries --------------------
 
 lib%.so: %.o
 	@ mkdir -p $(LIB_DIR)
-	$(CPP) $(LFLAGS) -shared -o $(LIB_DIR)/$@.1.0.1 $^ $(LIBS) -lc
+	$(CXX) $(LDFLAGS) -shared -o $(LIB_DIR)/$@.1.0.1 $< $(LDLIBS) -lc
 	@ ln -sf $(LIB_DIR)/$@.1.0.1 $(LIB_DIR)/$@
 
+# -------------------- pattern rules --------------------
+# this rule sets the name of the .cc file at the beginning of the line (easier to find)
+
 %.o: %.cc %.hh
-	$(CPP) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CXX) $< -c $(CPPFLAGS) $(CXXFLAGS) -o $@
+
+# -------------------- default rule for executables --------------------
+
+%: %.cc $(LOADLIBES)
+	$(CXX) $< $(CXXFLAGS) $(CPPFLAGS) $(LOADLIBES) $(LDLIBS) -o $@
+
 
 tar:
 	@echo "creating zipped tar-ball ... "
-	tar -chvzf CommandLineInterface.tar.gz CommandLineInterface.cc CommandLineInterface.hh Makefile test.cc Utilities.cc Utilities.hh
+	tar -chvzf CommandLineInterface.tar.gz CommandLineInterface.cc CommandLineInterface.hh Makefile test.cc Utilities.cc Utilities.hh TextAttributes.cc TextAttributes.hh
 
 #--------------------------------------------------
 clean:
