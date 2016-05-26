@@ -7,7 +7,6 @@
 SHELL 		= /bin/sh
 
 LIB_DIR 	= $(HOME)/lib
-BIN_DIR		= $(HOME)/bin
 
 ROOTCFLAGS   := $(shell root-config --cflags)
 ROOTLIBS     := $(shell root-config --libs)
@@ -43,7 +42,9 @@ all:  libCommandLineInterface.so libUtilities.so libTextAttributes.so
 # -------------------- libraries --------------------
 
 lib%.so: %.o
+	@ mkdir -p $(LIB_DIR)
 	$(CXX) $(LDFLAGS) -shared -o $(LIB_DIR)/$@.1.0.1 $< $(LDLIBS) -lc
+	@ ln -sf $(LIB_DIR)/$@.1.0.1 $(LIB_DIR)/$@
 
 # -------------------- pattern rules --------------------
 # this rule sets the name of the .cc file at the beginning of the line (easier to find)
