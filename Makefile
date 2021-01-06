@@ -6,7 +6,7 @@
 
 SHELL 		= /bin/sh
 
-LIB_DIR 	= $(HOME)/lib
+LIB_DIR 	= /softwares/lib
 
 ROOTCFLAGS   := $(shell root-config --cflags)
 ROOTLIBS     := $(shell root-config --libs)
@@ -15,7 +15,7 @@ ROOTINC      := -I$(shell root-config --incdir)
 
 INCLUDES        = -I.
 
-LIBRARIES	= 
+LIBRARIES	=
 
 CC		= gcc
 CXX             = g++
