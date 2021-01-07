@@ -7,6 +7,8 @@
 #include <cstring>
 #include <cstdlib>
 #include <vector>
+#include <typeinfo>
+#include <cxxabi.h>
 
 class CommandLineInterface {
 public:
@@ -14,21 +16,14 @@ public:
   ~CommandLineInterface(){};
 
   //main functions to check all flags from command line
-  bool CheckFlags(int, char**, const bool& Debug = false);
+  bool CheckFlags(int,char*[],const bool& Debug = false);
+
+  void Help(char*);
 
   //functions to add flags
   void Add(const char*);
-  void Add(const char*, const char*, bool*);
-  void Add(const char*, const char*, char**);
-  void Add(const char*, const char*, std::string*);
-  void Add(const char*, const char*, short*);
-  void Add(const char*, const char*, int*);
-  void Add(const char*, const char*, long long*);
-  void Add(const char*, const char*, uint8_t*);
-  void Add(const char*, const char*, uint16_t*);
-  void Add(const char*, const char*, uint32_t*);
-  void Add(const char*, const char*, uint64_t*);
-  //void Add(const char*, const char*, size_t*);
+  template<typename T>
+  void Add(const char*, const char*, T*);
   void Add(const char*, const char*, double*, double factor = 1.);
   void Add(const char*, const char*, std::vector<char*>*);
   void Add(const char*, const char*, std::vector<std::string>*);
@@ -56,5 +51,25 @@ private:
   std::vector<std::string> fComments;
   std::vector<double> fFactors;
 };
+
+template<typename T>
+void CommandLineInterface::Add(const char* flag, const char* comment, T* value) {
+  if(FlagExists(flag))
+    return;
+  if(strlen(flag) > fMaximumFlagLength)
+    fMaximumFlagLength = strlen(flag);
+  fFlags.push_back(std::string(flag));
+  fValues.push_back((void*) value);
+  int status;
+  char* type = abi::__cxa_demangle(typeid(T).name(), 0, 0, &status);
+  if(strlen(type) > fMaximumTypeLength)
+    fMaximumTypeLength = strlen(type);
+  fTypes.push_back(std::string(type));
+  if(strlen(comment) > fMaximumCommentLength)
+    fMaximumCommentLength = strlen(comment);
+  fComments.push_back(std::string(comment));
+  fFactors.push_back(1.);
+  free(type);
+}
 
 #endif
