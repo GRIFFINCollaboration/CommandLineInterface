@@ -6,7 +6,6 @@ int main(int argc, char** argv) {
   bool myBool = false;
   char* myCharP = new char;
   std::string myString;
-  std::vector<std::string> myStringVector;
   short myShort = 0;
   int myInt = 0;
   long long myLongLong = 0;
@@ -14,6 +13,8 @@ int main(int argc, char** argv) {
   uint16_t myUint16 = 0;
   uint32_t myUint32 = 0;
   uint64_t myUint64 = 0;
+  std::vector<std::string> myStringVector;
+  std::vector<int> myIntVector;
 
   CommandLineInterface interface;
 
@@ -29,6 +30,7 @@ int main(int argc, char** argv) {
   interface.Add("-f9",  "comment  9", &myUint32);
   interface.Add("-f10", "comment 10", &myUint64);
   interface.Add("-f11", "comment 11", &myStringVector);
+  interface.Add("-f12", "comment 12", &myIntVector);
 
   //void Add(const char*, const char*, double*, double factor = 1.);
   //void Add(const char*, const char*, vector<char*>*);
