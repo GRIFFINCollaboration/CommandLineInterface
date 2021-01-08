@@ -39,3 +39,6 @@ install(TARGETS CommandLineInterface DESTINATION lib)
 install(TARGETS Utilities DESTINATION lib)
 install(TARGETS TextAttributes DESTINATION lib)
 
+# add test executable
+add_executable(CommandLineInterfaceTest EXCLUDE_FROM_ALL CommandLineInterfaceTest.cc)
+target_link_libraries(CommandLineInterfaceTest CommandLineInterface)
