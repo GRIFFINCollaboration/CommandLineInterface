@@ -48,7 +48,7 @@ bool CommandLineInterface::CheckFlags(int argc, char* argv[], const bool& Debug)
 	  *((char**) fValues[j]) = argv[i+1];
 	  i++;
 	  break;//found the right flag for this argument so the flag loop can be stopped
-	} else if(fTypes[j] == "std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >") {
+	} else if(fTypes[j] == "std::string") {
 	  //set the string to the first following argument (these are split by whitespace)
 	  *((std::string*) fValues[j]) = argv[i+1];
 	  i+=2;
@@ -117,7 +117,7 @@ bool CommandLineInterface::CheckFlags(int argc, char* argv[], const bool& Debug)
 	  
 	  i--;
 	  break;//found the right flag for this argument so the flag loop can be stopped
-	} else if(fTypes[j] == "std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >>") {
+	} else if(fTypes[j] == "std::vector<std::string>") {
 	  i++;
 	  //as long as there are arguments left and no new flag is found (flags start with -) => read another value
 	  //reset the std::vector
@@ -308,7 +308,7 @@ std::ostream& operator <<(std::ostream &os,const CommandLineInterface &obj) {
       std::cout<<obj.fFlags[i]<<": "<<*((bool*) obj.fValues[i])<<std::endl;
     } else if(obj.fTypes[i] == "char*") {
       std::cout<<obj.fFlags[i]<<": '"<<*((char**) obj.fValues[i])<<"'"<<std::endl;
-    } else if(obj.fTypes[i] == "std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >") {
+    } else if(obj.fTypes[i] == "std::string") {
       std::cout<<obj.fFlags[i]<<": '"<<*((std::string*) obj.fValues[i])<<"'"<<std::endl;
     } else if(obj.fTypes[i] == "short") {
       std::cout<<obj.fFlags[i]<<": "<<*((short*) obj.fValues[i])<<std::endl;
@@ -333,7 +333,7 @@ std::ostream& operator <<(std::ostream &os,const CommandLineInterface &obj) {
 	  std::cout<<"'"<<(*((std::vector<char*>*) obj.fValues[i]))[j]<<"' ";
 	}
       std::cout<<std::endl;
-    } else if(obj.fTypes[i] == "std::vector<std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >>") {
+    } else if(obj.fTypes[i] == "std::vector<std::string>") {
       std::cout<<obj.fFlags[i]<<": ";
       for(size_t j = 0; j < ((std::vector<std::string>*) obj.fValues[i])->size(); j++)
 	{

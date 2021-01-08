@@ -2,12 +2,11 @@
 
 #include "CommandLineInterface.hh"
 
-using namespace std;
-
 int main(int argc, char** argv) {
   bool myBool = false;
   char* myCharP = new char;
-  string myString;
+  std::string myString;
+  std::vector<std::string> myStringVector;
   short myShort = 0;
   int myInt = 0;
   long long myLongLong = 0;
@@ -29,6 +28,7 @@ int main(int argc, char** argv) {
   interface.Add("-f8",  "comment  8", &myUint16);
   interface.Add("-f9",  "comment  9", &myUint32);
   interface.Add("-f10", "comment 10", &myUint64);
+  interface.Add("-f11", "comment 11", &myStringVector);
 
   //void Add(const char*, const char*, double*, double factor = 1.);
   //void Add(const char*, const char*, vector<char*>*);
@@ -45,9 +45,9 @@ int main(int argc, char** argv) {
 
   interface.CheckFlags(argc,argv);
 
-  cout<<endl
-      <<"----------------------------------------"<<endl
-      <<interface<<endl;
+  std::cout<<std::endl
+			  <<"----------------------------------------"<<std::endl
+           <<interface<<std::endl;
 
   return 0;
 }

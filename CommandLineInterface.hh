@@ -62,11 +62,21 @@ void CommandLineInterface::Add(const char* flag, const char* comment, T* value) 
   fValues.push_back((void*) value);
   int status;
   char* type = abi::__cxa_demangle(typeid(T).name(), 0, 0, &status);
-  if(strlen(type) > fMaximumTypeLength)
-    fMaximumTypeLength = strlen(type);
-  fTypes.push_back(std::string(type));
-  if(strlen(comment) > fMaximumCommentLength)
-    fMaximumCommentLength = strlen(comment);
+  // make "std::string" more readable
+  if(strcmp(type,"std::__cxx11::basic_string<char, std::char_traits<char>, std::allocator<char> >") == 0) {
+	  if(11 > fMaximumTypeLength) {
+		  fMaximumTypeLength = 11;
+	  }
+	  fTypes.push_back(std::string("std::string"));
+  } else {
+	  if(strlen(type) > fMaximumTypeLength) {
+		  fMaximumTypeLength = strlen(type);
+	  }
+	  fTypes.push_back(std::string(type));
+  }
+  if(strlen(comment) > fMaximumCommentLength) {
+	  fMaximumCommentLength = strlen(comment);
+  }
   fComments.push_back(std::string(comment));
   fFactors.push_back(1.);
   free(type);
