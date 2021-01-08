@@ -22,7 +22,7 @@ cd build;
 cmake ../;
 make install;
 ```
-will compile the libraries in a new subdirectory called build (can be any name you choose), and installed in ~/lib. If the libraries are to be installed in a different path of form <PREFIX>/lib, use
+will compile the libraries in a new subdirectory called build (can be any name you choose), and installed in ~/lib. If the libraries are to be installed in a different path of form ```<PREFIX>/lib```, use
 ```
 cmake ../ -DCMAKE_INSTALL_PREFIX=<PREFIX>;
 ```
