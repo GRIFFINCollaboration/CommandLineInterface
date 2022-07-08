@@ -8,10 +8,11 @@ project(HelperLibraries VERSION 1.1.0 DESCRIPTION "libraries for command line ar
 find_package(ROOT REQUIRED)
 
 # specify the C++ standard
-set(CMAKE_CXX_STANDARD 11)
-set(CMAKE_CXX_STANDARD_REQUIRED True)
+# set(CMAKE_CXX_STANDARD 11)
+# set(CMAKE_CXX_STANDARD_REQUIRED True)
 
-string(APPEND CMAKE_CXX_FLAGS " -pedantic -Wall -Wno-long-long -g -O3")
+# pick up c++ standard from ROOT install
+string(APPEND CMAKE_CXX_FLAGS "${ROOT_CXX_FLAGS} -pedantic -Wall -Wno-long-long -g -O3")
 
 # if the default prefix is being used (i.e. no -DCMAKE_INSTALL_PREFIX has been used), overwrite it to $HOME (so install into ~/lib)
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
